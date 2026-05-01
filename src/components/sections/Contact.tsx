@@ -4,11 +4,12 @@ import emailjs from "@emailjs/browser";
 import { Github, Linkedin, Mail, Instagram, Twitter, Check, Send, Loader2 } from "lucide-react";
 import { toast } from "sonner";
 
+
 // 🔑 Replace the placeholders below with your own EmailJS values.
 // Sign up free at https://www.emailjs.com — create a service, template, and grab your public key.
-const EMAILJS_SERVICE_ID = "YOUR_EMAILJS_SERVICE_ID";
-const EMAILJS_TEMPLATE_ID = "YOUR_EMAILJS_TEMPLATE_ID";
-const EMAILJS_PUBLIC_KEY = "YOUR_EMAILJS_PUBLIC_KEY";
+const EMAILJS_SERVICE_ID = import.meta.env.VITE_EMAILJS_SERVICE_ID;
+const EMAILJS_TEMPLATE_ID = import.meta.env.VITE_EMAILJS_TEMPLATE_ID;
+const EMAILJS_PUBLIC_KEY = import.meta.env.VITE_EMAILJS_PUBLIC_KEY;
 
 const socials = [
   { icon: Github, label: "GitHub", href: "https://github.com/Saumyaaaaa" },
@@ -27,21 +28,20 @@ export const Contact = () => {
     if (!formRef.current) return;
     setStatus("loading");
     try {
-      if (EMAILJS_SERVICE_ID.startsWith("YOUR_")) {
-        // Fallback when EmailJS isn't configured yet
-        await new Promise((r) => setTimeout(r, 900));
-        toast.message("Message captured (demo)", {
-          description: "Add your EmailJS keys in Contact.tsx to send for real.",
-        });
-      } else {
-        await emailjs.sendForm(
-          EMAILJS_SERVICE_ID,
-          EMAILJS_TEMPLATE_ID,
-          formRef.current,
-          { publicKey: EMAILJS_PUBLIC_KEY },
-        );
-        toast.success("Message sent! I'll get back to you soon.");
-      }
+     if (!EMAILJS_SERVICE_ID) {
+       await new Promise((r) => setTimeout(r, 900));
+       toast.message("Message captured (demo)", {
+         description: "Add your EmailJS keys in Contact.tsx to send for real.",
+       });
+     } else {
+       await emailjs.sendForm(
+         EMAILJS_SERVICE_ID,
+         EMAILJS_TEMPLATE_ID,
+         formRef.current,
+         { publicKey: EMAILJS_PUBLIC_KEY },
+       );
+       toast.success("Message sent! I'll get back to you soon.");
+     }
       setStatus("success");
       formRef.current.reset();
       setTimeout(() => setStatus("idle"), 2400);
