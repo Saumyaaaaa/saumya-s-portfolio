@@ -44,6 +44,7 @@ const projects: Project[] = [
     description: "NGO website spotlighting eco-conscious initiatives in the Himalayas.",
     details: "Designed and developed a content-driven site for an environmental NGO with a focus on storytelling and accessibility.",
     live: "https://ecohimalayahub.vercel.app/",
+    image: ngoImg,
     size: "md",
   },
   {
@@ -54,6 +55,7 @@ const projects: Project[] = [
     details: "Built a clean, responsive UI consuming a public video API with reusable components and search-driven navigation.",
     github: "https://github.com/Saumyaaaaa/youtube_clone",
     live: "https://youtube-clone-phi-fawn.vercel.app",
+    image: youtubeImg,
     size: "md",
   },
   {
@@ -64,6 +66,7 @@ const projects: Project[] = [
     details: "A small project built while learning React fundamentals — focused on component composition and API integration.",
     github: "https://github.com/Saumyaaaaa/my-recipe",
     live: "https://my-recipe-dusky.vercel.app",
+    image: recipeImg,
     size: "md",
   },
   {
@@ -76,13 +79,14 @@ const projects: Project[] = [
     size: "md",
   },
   {
-    title: "Quote Generator",
-    date: "Sep 2024",
+    title: "Grocery App",
+    date: "2024",
     stack: ["HTML", "CSS", "JavaScript"],
-    description: "Tiny, delightful web app that serves up a fresh quote on demand.",
-    details: "A bite-sized project celebrating the basics — semantic HTML, thoughtful CSS, and a sprinkle of vanilla JS.",
+    description: "Lightweight grocery list web app with a clean, friendly UI.",
+    details: "Vanilla JS project focused on DOM manipulation, persistence, and a tactile, easy-to-use interface.",
     github: "https://github.com/Saumyaaaaa/Quote-Generator",
     live: "https://saumyaaaaa.github.io/grocery/",
+    image: groceryImg,
     size: "md",
   },
   {
