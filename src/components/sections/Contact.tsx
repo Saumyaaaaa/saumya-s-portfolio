@@ -1,7 +1,7 @@
 import { motion, AnimatePresence } from "framer-motion";
 import { useRef, useState } from "react";
 import emailjs from "@emailjs/browser";
-import { Github, Linkedin, Mail, Instagram, Check, Send, Loader2 } from "lucide-react";
+import { Github, Linkedin, Mail, Instagram, Twitter, Check, Send, Loader2 } from "lucide-react";
 import { toast } from "sonner";
 
 // 🔑 Replace the placeholders below with your own EmailJS values.
@@ -14,7 +14,8 @@ const socials = [
   { icon: Github, label: "GitHub", href: "https://github.com/Saumyaaaaa" },
   { icon: Linkedin, label: "LinkedIn", href: "https://linkedin.com/in/saumyaneupane" },
   { icon: Mail, label: "Gmail", href: "mailto:saumyaneupane@gmail.com" },
-  { icon: Instagram, label: "Instagram", href: "#" },
+  { icon: Instagram, label: "Instagram", href: "https://instagram.com/saumya_neupane" },
+  { icon: Twitter, label: "Twitter", href: "https://twitter.com/saumya_neupane" },
 ];
 
 export const Contact = () => {
