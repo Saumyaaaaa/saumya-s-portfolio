@@ -1,14 +1,32 @@
 import { motion } from "framer-motion";
 import { Camera } from "lucide-react";
 import { useRef, useState } from "react";
+import graduationPhoto from "@/assets/projects/graduation.jfif";
+import bajraPhoto from "@/assets/projects/bajra.jfif";
+import cfcPhoto from "@/assets/projects/cfc.jfif";
 
 const slots = [
-  { caption: "Lions Club — Blood Donation Drive", h: "tall" },
-  { caption: "Code for Change Meetup", h: "short" },
-  { caption: "GiftsJoyy — The Store", h: "med" },
-  { caption: "Graduation Day", h: "tall" },
-  { caption: "Team Moments @ Bajra", h: "short" },
-  { caption: "Just me :)", h: "med" },
+  {
+    caption: "Graduation Day",
+    h: "tall",
+    defaultSrc: graduationPhoto,
+    position: "object-center",
+    style: { objectPosition: "85% center" },
+  },
+  {
+    caption: "Team Moments @ Bajra",
+    h: "short",
+    defaultSrc: bajraPhoto,
+    position: "object-center",
+    style: {},
+  },
+  {
+    caption: "Code for Change Meetup",
+    h: "med",
+    defaultSrc: cfcPhoto,
+    position: "object-center",
+    style: {},
+  },
 ];
 
 const heightClass: Record<string, string> = {
@@ -17,8 +35,22 @@ const heightClass: Record<string, string> = {
   short: "h-[260px]",
 };
 
-const PhotoSlot = ({ caption, hClass, index }: { caption: string; hClass: string; index: number }) => {
-  const [src, setSrc] = useState<string | null>(null);
+const PhotoSlot = ({
+  caption,
+  hClass,
+  index,
+  defaultSrc,
+  position = "object-center",
+  style = {},
+}: {
+  caption: string;
+  hClass: string;
+  index: number;
+  defaultSrc?: string;
+  position?: string;
+  style?: React.CSSProperties;
+}) => {
+  const [src, setSrc] = useState<string | null>(defaultSrc || null);
   const inputRef = useRef<HTMLInputElement>(null);
 
   return (
@@ -41,12 +73,15 @@ const PhotoSlot = ({ caption, hClass, index }: { caption: string; hClass: string
             transition={{ duration: 0.6 }}
             src={src}
             alt={caption}
-            className="w-full h-full object-cover"
+            className={`w-full h-full object-cover ${position}`}
+            style={style}
           />
         ) : (
           <div className="w-full h-full flex flex-col items-center justify-center text-muted-foreground bg-gradient-warm p-6 text-center">
             <Camera className="w-7 h-7 text-primary/70 mb-3" />
-            <span className="text-xs uppercase tracking-widest">Click to upload</span>
+            <span className="text-xs uppercase tracking-widest">
+              Click to upload
+            </span>
           </div>
         )}
       </button>
@@ -60,7 +95,9 @@ const PhotoSlot = ({ caption, hClass, index }: { caption: string; hClass: string
           if (f) setSrc(URL.createObjectURL(f));
         }}
       />
-      <p className="font-hand italic text-lg mt-3 text-foreground/70">{caption}</p>
+      <p className="font-hand italic text-lg mt-3 text-foreground/70">
+        {caption}
+      </p>
     </motion.div>
   );
 };
@@ -69,15 +106,27 @@ export const Life = () => {
   return (
     <section id="life" className="py-28 md:py-36">
       <div className="container">
-        <p className="text-xs uppercase tracking-[0.4em] text-primary mb-4">— life</p>
-        <h2 className="font-serif text-4xl md:text-6xl mb-4">Beyond the screen.</h2>
+        <p className="text-xs uppercase tracking-[0.4em] text-primary mb-4">
+          — life
+        </p>
+        <h2 className="font-serif text-4xl md:text-6xl mb-4">
+          Beyond the screen.
+        </h2>
         <p className="text-muted-foreground max-w-xl mb-12">
           A wall of moments — community, friends, and small joys.
         </p>
 
         <div className="columns-1 sm:columns-2 lg:columns-3 gap-6">
           {slots.map((s, i) => (
-            <PhotoSlot key={s.caption} caption={s.caption} hClass={heightClass[s.h]} index={i} />
+            <PhotoSlot
+              key={s.caption}
+              caption={s.caption}
+              hClass={heightClass[s.h]}
+              index={i}
+              defaultSrc={s.defaultSrc}
+              position={s.position}
+              style={s.style}
+            />
           ))}
         </div>
       </div>

@@ -1,6 +1,7 @@
 import { motion, useInView } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
 import { Camera } from "lucide-react";
+import myPhoto from "@/assets/projects/saumya.jfif";
 
 const Counter = ({ to, label }: { to: number; label: string }) => {
   const ref = useRef<HTMLDivElement>(null);
@@ -23,14 +24,27 @@ const Counter = ({ to, label }: { to: number; label: string }) => {
 
   return (
     <div ref={ref} className="text-center">
-      <div className="font-serif text-4xl md:text-5xl text-primary">{n}{label.includes("+") ? "+" : ""}</div>
-      <div className="mt-2 text-xs uppercase tracking-widest text-muted-foreground">{label.replace("+", "")}</div>
+      <div className="font-serif text-4xl md:text-5xl text-primary">
+        {n}
+        {label.includes("+") ? "+" : ""}
+      </div>
+      <div className="mt-2 text-xs uppercase tracking-widest text-muted-foreground">
+        {label.replace("+", "")}
+      </div>
     </div>
   );
 };
 
-const PhotoUpload = ({ caption, className = "" }: { caption: string; className?: string }) => {
-  const [src, setSrc] = useState<string | null>(null);
+const PhotoUpload = ({
+  caption,
+  className = "",
+  defaultSrc,
+}: {
+  caption: string;
+  className?: string;
+  defaultSrc?: string;
+}) => {
+  const [src, setSrc] = useState<string | null>(defaultSrc || null);
   const inputRef = useRef<HTMLInputElement>(null);
 
   return (
@@ -45,7 +59,9 @@ const PhotoUpload = ({ caption, className = "" }: { caption: string; className?:
         ) : (
           <div className="w-full h-full flex flex-col items-center justify-center text-muted-foreground p-6 text-center bg-gradient-warm">
             <Camera className="w-8 h-8 mb-3 text-primary/70" />
-            <span className="text-xs uppercase tracking-widest">Click to upload</span>
+            <span className="text-xs uppercase tracking-widest">
+              Click to upload
+            </span>
             <span className="text-xs mt-1 opacity-60">your photo</span>
           </div>
         )}
@@ -60,7 +76,9 @@ const PhotoUpload = ({ caption, className = "" }: { caption: string; className?:
           if (f) setSrc(URL.createObjectURL(f));
         }}
       />
-      <p className="font-hand text-xl text-center mt-3 text-foreground/70">{caption}</p>
+      <p className="font-hand text-xl text-center mt-3 text-foreground/70">
+        {caption}
+      </p>
     </div>
   );
 };
@@ -87,7 +105,7 @@ export const About = () => {
             className="md:col-span-5"
           >
             <div className="bg-card p-4 pb-2 shadow-soft max-w-[320px] mx-auto">
-              <PhotoUpload caption="That's me :)" />
+              <PhotoUpload caption="That's me :)" defaultSrc={myPhoto} />
             </div>
           </motion.div>
 
@@ -99,18 +117,25 @@ export const About = () => {
             className="md:col-span-7"
           >
             <h2 className="font-serif text-4xl md:text-6xl leading-tight text-balance">
-              A little story <span className="italic text-primary">about me.</span>
+              A little story{" "}
+              <span className="italic text-primary">about me.</span>
             </h2>
 
             <div className="mt-8 space-y-5 text-lg text-foreground/80 leading-relaxed">
               <p>
-                I just finished my Bachelor's in Computer Science and I'm currently working as a{" "}
-                <span className="text-primary">QA Analyst</span>. I'm passionate about AI and actively seeking a{" "}
-                <span className="font-medium text-foreground">fully-funded Master's scholarship in Artificial Intelligence</span>.
+                I just finished my Bachelor's in Computer Science and I'm
+                currently working as a{" "}
+                <span className="text-primary">QA Analyst</span>. I'm passionate
+                about AI and actively seeking a{" "}
+                <span className="font-medium text-foreground">
+                  fully-funded Master's scholarship in Artificial Intelligence
+                </span>
+                .
               </p>
               <p>
-                Outside tech, I run an Instagram &amp; TikTok store called <em>GiftsJoyy</em>, volunteer with{" "}
-                <em>Lions Club Kathmandu</em>, and love meeting people through <em>Code for Change</em>.
+                Outside tech, I run an Instagram &amp; TikTok store called{" "}
+                <em>GiftsJoyy</em>, volunteer with <em>Lions Club Kathmandu</em>
+                , and love meeting people through <em>Code for Change</em>.
               </p>
             </div>
 

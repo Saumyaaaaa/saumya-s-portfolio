@@ -1,8 +1,7 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import * as THREE from "three";
 import { motion } from "framer-motion";
 import { ArrowDown, Download, ArrowUpRight } from "lucide-react";
-import { useState } from "react";
 
 const ParticleField = () => {
   const ref = useRef<HTMLDivElement>(null);
@@ -10,17 +9,19 @@ const ParticleField = () => {
   useEffect(() => {
     const mount = ref.current!;
     const isMobile = window.matchMedia("(pointer: coarse)").matches;
-
     const scene = new THREE.Scene();
-    const camera = new THREE.PerspectiveCamera(60, mount.clientWidth / mount.clientHeight, 0.1, 100);
+    const camera = new THREE.PerspectiveCamera(
+      60,
+      mount.clientWidth / mount.clientHeight,
+      0.1,
+      100,
+    );
     camera.position.z = 8;
-
     const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
     renderer.setSize(mount.clientWidth, mount.clientHeight);
     renderer.setClearColor(0x000000, 0);
     mount.appendChild(renderer.domElement);
-
     const count = isMobile ? 250 : 900;
     const positions = new Float32Array(count * 3);
     for (let i = 0; i < count; i++) {
@@ -30,7 +31,6 @@ const ParticleField = () => {
     }
     const geo = new THREE.BufferGeometry();
     geo.setAttribute("position", new THREE.BufferAttribute(positions, 3));
-
     const mat = new THREE.PointsMaterial({
       size: 0.045,
       color: new THREE.Color("#c4785a"),
@@ -41,8 +41,6 @@ const ParticleField = () => {
     });
     const points = new THREE.Points(geo, mat);
     scene.add(points);
-
-    // Update color based on theme
     const updateColor = () => {
       const isDark = document.documentElement.classList.contains("dark");
       mat.color = new THREE.Color(isDark ? "#e3a78c" : "#c4785a");
@@ -50,15 +48,17 @@ const ParticleField = () => {
     };
     updateColor();
     const observer = new MutationObserver(updateColor);
-    observer.observe(document.documentElement, { attributes: true, attributeFilter: ["class"] });
-
-    let mx = 0, my = 0;
+    observer.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ["class"],
+    });
+    let mx = 0,
+      my = 0;
     const onMove = (e: MouseEvent) => {
       mx = (e.clientX / window.innerWidth - 0.5) * 2;
       my = (e.clientY / window.innerHeight - 0.5) * 2;
     };
     window.addEventListener("mousemove", onMove);
-
     let raf = 0;
     const start = performance.now();
     const tick = () => {
@@ -74,14 +74,12 @@ const ParticleField = () => {
       raf = requestAnimationFrame(tick);
     };
     tick();
-
     const onResize = () => {
       camera.aspect = mount.clientWidth / mount.clientHeight;
       camera.updateProjectionMatrix();
       renderer.setSize(mount.clientWidth, mount.clientHeight);
     };
     window.addEventListener("resize", onResize);
-
     return () => {
       cancelAnimationFrame(raf);
       window.removeEventListener("mousemove", onMove);
@@ -148,16 +146,20 @@ export const Hero = () => {
   }, []);
 
   return (
-    <section id="home" className="relative min-h-screen flex items-center justify-center overflow-hidden grain">
+    <section
+      id="home"
+      className="relative min-h-screen flex items-center justify-center overflow-hidden grain"
+    >
       <ParticleField />
 
-      {/* Soft warm gradient blobs */}
       <div className="absolute inset-0 -z-10 pointer-events-none">
         <div className="absolute top-1/4 left-1/4 w-[40rem] h-[40rem] rounded-full bg-gradient-orb blur-3xl animate-blob" />
-        <div className="absolute bottom-1/4 right-1/4 w-[32rem] h-[32rem] rounded-full bg-gradient-orb blur-3xl animate-blob" style={{ animationDelay: "-7s" }} />
+        <div
+          className="absolute bottom-1/4 right-1/4 w-[32rem] h-[32rem] rounded-full bg-gradient-orb blur-3xl animate-blob"
+          style={{ animationDelay: "-7s" }}
+        />
       </div>
 
-      {/* Glowing follow orb */}
       <div
         className="hidden md:block fixed w-[28rem] h-[28rem] rounded-full bg-gradient-orb blur-3xl pointer-events-none -z-10 transition-transform duration-700 ease-out"
         style={{ transform: `translate(${orb.x - 224}px, ${orb.y - 224}px)` }}
@@ -171,7 +173,7 @@ export const Hero = () => {
           transition={{ delay: 0.2, duration: 0.8 }}
           className="font-hand text-xl md:text-2xl text-primary mb-4"
         >
-          hello, namaste — I'm
+          hello, namaste I am
         </motion.p>
 
         <motion.h1
@@ -180,8 +182,7 @@ export const Hero = () => {
           transition={{ delay: 0.35, duration: 1, ease: [0.2, 0.8, 0.2, 1] }}
           className="font-serif text-6xl sm:text-7xl md:text-8xl lg:text-9xl leading-[0.95] tracking-tight text-balance"
         >
-          Saumya{" "}
-          <span className="italic text-primary">Neupane</span>
+          Saumya <span className="italic text-primary">Neupane</span>
         </motion.h1>
 
         <motion.div
@@ -207,8 +208,12 @@ export const Hero = () => {
             View My Work
             <ArrowUpRight className="w-4 h-4 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
           </a>
+
           <a
-            href="#contact"
+            href="/SaumyaNeupane_CV.pdf"
+            download="Saumya_Neupane_CV.pdf"
+            target="_blank"
+            rel="noopener noreferrer"
             className="group inline-flex items-center gap-2 px-8 py-4 rounded-full border border-foreground/20 hover:border-primary hover:bg-primary/5 transition-all"
           >
             <Download className="w-4 h-4" />
