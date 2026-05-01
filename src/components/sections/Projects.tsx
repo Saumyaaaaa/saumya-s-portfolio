@@ -1,6 +1,10 @@
 import { motion, AnimatePresence } from "framer-motion";
 import { useState } from "react";
 import { Github, ExternalLink, Plus, Image as ImageIcon } from "lucide-react";
+import ngoImg from "@/assets/projects/ngo.jpg";
+import youtubeImg from "@/assets/projects/youtube.jpg";
+import recipeImg from "@/assets/projects/recipe.jpg";
+import groceryImg from "@/assets/projects/grocery.jpg";
 
 type Project = {
   title: string;
@@ -10,6 +14,7 @@ type Project = {
   details: string;
   github?: string;
   live?: string;
+  image?: string;
   size: "lg" | "md";
 };
 
