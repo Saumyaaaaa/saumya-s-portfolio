@@ -1,0 +1,132 @@
+import { motion, useInView } from "framer-motion";
+import { useEffect, useRef, useState } from "react";
+import { Camera } from "lucide-react";
+
+const Counter = ({ to, label }: { to: number; label: string }) => {
+  const ref = useRef<HTMLDivElement>(null);
+  const inView = useInView(ref, { once: true, margin: "-50px" });
+  const [n, setN] = useState(0);
+
+  useEffect(() => {
+    if (!inView) return;
+    let raf = 0;
+    const start = performance.now();
+    const dur = 1200;
+    const tick = () => {
+      const p = Math.min(1, (performance.now() - start) / dur);
+      setN(Math.round(to * (1 - Math.pow(1 - p, 3))));
+      if (p < 1) raf = requestAnimationFrame(tick);
+    };
+    raf = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(raf);
+  }, [inView, to]);
+
+  return (
+    <div ref={ref} className="text-center">
+      <div className="font-serif text-4xl md:text-5xl text-primary">{n}{label.includes("+") ? "+" : ""}</div>
+      <div className="mt-2 text-xs uppercase tracking-widest text-muted-foreground">{label.replace("+", "")}</div>
+    </div>
+  );
+};
+
+const PhotoUpload = ({ caption, className = "" }: { caption: string; className?: string }) => {
+  const [src, setSrc] = useState<string | null>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  return (
+    <div className={className}>
+      <button
+        type="button"
+        onClick={() => inputRef.current?.click()}
+        className="group relative block w-full aspect-[4/5] rounded-sm bg-card border border-border overflow-hidden shadow-soft hover:shadow-glow transition-all"
+      >
+        {src ? (
+          <img src={src} alt={caption} className="w-full h-full object-cover" />
+        ) : (
+          <div className="w-full h-full flex flex-col items-center justify-center text-muted-foreground p-6 text-center bg-gradient-warm">
+            <Camera className="w-8 h-8 mb-3 text-primary/70" />
+            <span className="text-xs uppercase tracking-widest">Click to upload</span>
+            <span className="text-xs mt-1 opacity-60">your photo</span>
+          </div>
+        )}
+      </button>
+      <input
+        ref={inputRef}
+        type="file"
+        accept="image/*"
+        className="hidden"
+        onChange={(e) => {
+          const f = e.target.files?.[0];
+          if (f) setSrc(URL.createObjectURL(f));
+        }}
+      />
+      <p className="font-hand text-xl text-center mt-3 text-foreground/70">{caption}</p>
+    </div>
+  );
+};
+
+export const About = () => {
+  return (
+    <section id="about" className="py-28 md:py-40 relative">
+      <div className="container">
+        <motion.p
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          className="text-xs uppercase tracking-[0.4em] text-primary mb-4"
+        >
+          — about
+        </motion.p>
+
+        <div className="grid md:grid-cols-12 gap-12 md:gap-20 items-center">
+          <motion.div
+            initial={{ opacity: 0, x: -30, rotate: -8 }}
+            whileInView={{ opacity: 1, x: 0, rotate: -3 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.8 }}
+            className="md:col-span-5"
+          >
+            <div className="bg-card p-4 pb-2 shadow-soft max-w-[320px] mx-auto">
+              <PhotoUpload caption="That's me :)" />
+            </div>
+          </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.8, delay: 0.15 }}
+            className="md:col-span-7"
+          >
+            <h2 className="font-serif text-4xl md:text-6xl leading-tight text-balance">
+              A little story <span className="italic text-primary">about me.</span>
+            </h2>
+
+            <div className="mt-8 space-y-5 text-lg text-foreground/80 leading-relaxed">
+              <p>
+                I just finished my Bachelor's in Computer Science and I'm currently working as a{" "}
+                <span className="text-primary">QA Analyst</span>. I'm passionate about AI and actively seeking a{" "}
+                <span className="font-medium text-foreground">fully-funded Master's scholarship in Artificial Intelligence</span>.
+              </p>
+              <p>
+                Outside tech, I run an Instagram &amp; TikTok store called <em>GiftsJoyy</em>, volunteer with{" "}
+                <em>Lions Club Kathmandu</em>, and love meeting people through <em>Code for Change</em>.
+              </p>
+            </div>
+
+            <div className="mt-10 grid grid-cols-2 md:grid-cols-4 gap-6 py-6 border-y border-border">
+              <Counter to={2} label="Companies" />
+              <Counter to={4} label="Projects+" />
+              <Counter to={1} label="Lions Club" />
+              <Counter to={1} label="Online Store" />
+            </div>
+
+            <blockquote className="mt-10 pl-6 border-l-2 border-primary font-serif italic text-2xl md:text-3xl text-foreground/70 leading-snug">
+              "Curious, optimistic, and always adapting."
+            </blockquote>
+          </motion.div>
+        </div>
+      </div>
+    </section>
+  );
+};
