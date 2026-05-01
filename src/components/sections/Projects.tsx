@@ -100,15 +100,24 @@ const projects: Project[] = [
   },
 ];
 
-const MockBrowser = () => (
-  <div className="aspect-video w-full rounded-xl overflow-hidden border border-border bg-gradient-warm relative">
-    <div className="flex items-center gap-1.5 px-3 py-2 border-b border-border/50 bg-background/40">
+const MockBrowser = ({ image, title }: { image?: string; title: string }) => (
+  <div className="aspect-video w-full rounded-xl overflow-hidden border border-border bg-gradient-warm relative flex flex-col">
+    <div className="flex items-center gap-1.5 px-3 py-2 border-b border-border/50 bg-background/40 shrink-0">
       <span className="w-2.5 h-2.5 rounded-full bg-foreground/15" />
       <span className="w-2.5 h-2.5 rounded-full bg-foreground/15" />
       <span className="w-2.5 h-2.5 rounded-full bg-foreground/15" />
     </div>
-    <div className="flex-1 flex items-center justify-center h-full text-muted-foreground">
-      <ImageIcon className="w-10 h-10 opacity-40" />
+    <div className="flex-1 flex items-center justify-center text-muted-foreground overflow-hidden">
+      {image ? (
+        <img
+          src={image}
+          alt={`${title} preview`}
+          loading="lazy"
+          className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+        />
+      ) : (
+        <ImageIcon className="w-10 h-10 opacity-40" />
+      )}
     </div>
   </div>
 );
@@ -124,7 +133,7 @@ const Card = ({ p, expanded, onToggle }: { p: Project; expanded: boolean; onTogg
       whileHover={{ y: -4 }}
     >
       <motion.div layout="position">
-        <MockBrowser />
+        <MockBrowser image={p.image} title={p.title} />
         <div className="mt-6 flex items-center justify-between gap-3">
           <p className="text-xs uppercase tracking-widest text-muted-foreground">{p.date}</p>
           <div className="flex gap-2">
