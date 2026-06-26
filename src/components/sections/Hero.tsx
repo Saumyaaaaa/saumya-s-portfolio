@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import * as THREE from "three";
 import { motion } from "framer-motion";
-import { ArrowDown, Download, ArrowUpRight } from "lucide-react";
+import { ArrowDown, FileText, ArrowUpRight } from "lucide-react";
 
 const ParticleField = () => {
   const ref = useRef<HTMLDivElement>(null);
@@ -22,7 +22,7 @@ const ParticleField = () => {
     renderer.setSize(mount.clientWidth, mount.clientHeight);
     renderer.setClearColor(0x000000, 0);
     mount.appendChild(renderer.domElement);
-    const count = isMobile ? 250 : 900;
+    const count = isMobile ? 200 : 700;
     const positions = new Float32Array(count * 3);
     for (let i = 0; i < count; i++) {
       positions[i * 3] = (Math.random() - 0.5) * 18;
@@ -31,11 +31,13 @@ const ParticleField = () => {
     }
     const geo = new THREE.BufferGeometry();
     geo.setAttribute("position", new THREE.BufferAttribute(positions, 3));
+
+    // UPDATED THREE.JS COLOR STRINGS TO LUXURY GOLD
     const mat = new THREE.PointsMaterial({
-      size: 0.045,
-      color: new THREE.Color("#c4785a"),
+      size: 0.035,
+      color: new THREE.Color("#c4b295"),
       transparent: true,
-      opacity: 0.55,
+      opacity: 0.45,
       depthWrite: false,
       blending: THREE.AdditiveBlending,
     });
@@ -43,8 +45,8 @@ const ParticleField = () => {
     scene.add(points);
     const updateColor = () => {
       const isDark = document.documentElement.classList.contains("dark");
-      mat.color = new THREE.Color(isDark ? "#e3a78c" : "#c4785a");
-      mat.opacity = isDark ? 0.7 : 0.5;
+      mat.color = new THREE.Color(isDark ? "#c4b295" : "#8a7a63");
+      mat.opacity = isDark ? 0.55 : 0.4;
     };
     updateColor();
     const observer = new MutationObserver(updateColor);
@@ -62,12 +64,12 @@ const ParticleField = () => {
     let raf = 0;
     const start = performance.now();
     const tick = () => {
-      const t = (performance.now() - start) * 0.0001;
-      points.rotation.y = t * 0.6 + mx * 0.15;
-      points.rotation.x = -my * 0.15;
+      const t = (performance.now() - start) * 0.00008;
+      points.rotation.y = t * 0.5 + mx * 0.12;
+      points.rotation.x = -my * 0.12;
       const arr = geo.attributes.position.array as Float32Array;
       for (let i = 0; i < count; i++) {
-        arr[i * 3 + 1] += Math.sin(t * 4 + i) * 0.0008;
+        arr[i * 3 + 1] += Math.sin(t * 4 + i) * 0.0005;
       }
       geo.attributes.position.needsUpdate = true;
       renderer.render(scene, camera);
@@ -109,12 +111,12 @@ const Typewriter = () => {
 
   useEffect(() => {
     const word = subtitlePhrases[i];
-    const speed = del ? 50 : 90;
+    const speed = del ? 40 : 80;
     const t = setTimeout(() => {
       if (!del) {
         const next = word.slice(0, text.length + 1);
         setText(next);
-        if (next === word) setTimeout(() => setDel(true), 1500);
+        if (next === word) setTimeout(() => setDel(true), 1800);
       } else {
         const next = word.slice(0, text.length - 1);
         setText(next);
@@ -128,23 +130,14 @@ const Typewriter = () => {
   }, [text, del, i]);
 
   return (
-    <span className="font-sans text-foreground/80">
+    <span className="font-sans text-foreground/75 tracking-wide text-sm font-light">
       {text}
-      <span className="inline-block w-[2px] h-5 ml-0.5 bg-primary align-middle animate-pulse" />
+      <span className="inline-block w-[1px] h-4 ml-1 bg-primary/70 align-middle animate-pulse" />
     </span>
   );
 };
 
 export const Hero = () => {
-  const [orb, setOrb] = useState({ x: 0, y: 0 });
-
-  useEffect(() => {
-    if (window.matchMedia("(pointer: coarse)").matches) return;
-    const onMove = (e: MouseEvent) => setOrb({ x: e.clientX, y: e.clientY });
-    window.addEventListener("mousemove", onMove);
-    return () => window.removeEventListener("mousemove", onMove);
-  }, []);
-
   return (
     <section
       id="home"
@@ -152,69 +145,66 @@ export const Hero = () => {
     >
       <ParticleField />
 
+      {/* Atmospheric Soft Fluid Light Core */}
       <div className="absolute inset-0 -z-10 pointer-events-none">
-        <div className="absolute top-1/4 left-1/4 w-[40rem] h-[40rem] rounded-full bg-gradient-orb blur-3xl animate-blob" />
-        <div
-          className="absolute bottom-1/4 right-1/4 w-[32rem] h-[32rem] rounded-full bg-gradient-orb blur-3xl animate-blob"
-          style={{ animationDelay: "-7s" }}
-        />
+        <div className="absolute top-1/4 left-1/3 w-[35rem] h-[35rem] rounded-full bg-gradient-orb blur-[120px] opacity-60 mix-blend-screen" />
       </div>
 
-      <div
-        className="hidden md:block fixed w-[28rem] h-[28rem] rounded-full bg-gradient-orb blur-3xl pointer-events-none -z-10 transition-transform duration-700 ease-out"
-        style={{ transform: `translate(${orb.x - 224}px, ${orb.y - 224}px)` }}
-        aria-hidden
-      />
-
-      <div className="container relative text-center pt-24 pb-16">
+      <div className="container relative text-center pt-24 pb-16 max-w-4xl px-6">
         <motion.p
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: 15 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.2, duration: 0.8 }}
-          className="font-hand text-xl md:text-2xl text-primary mb-4"
+          transition={{ duration: 0.8 }}
+          className="font-hand text-lg md:text-xl text-primary mb-5 tracking-wide"
         >
           hello, namaste I am
         </motion.p>
 
         <motion.h1
-          initial={{ opacity: 0, y: 30 }}
+          initial={{ opacity: 0, y: 25 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.35, duration: 1, ease: [0.2, 0.8, 0.2, 1] }}
-          className="font-serif text-6xl sm:text-7xl md:text-8xl lg:text-9xl leading-[0.95] tracking-tight text-balance"
+          transition={{ delay: 0.15, duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
+          className="font-serif text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-light leading-[1.05] tracking-tight text-balance text-foreground"
         >
-          Saumya <span className="italic text-primary">Neupane</span>
+          Saumya{" "}
+          <span className="italic font-normal text-primary/90">Neupane</span>
         </motion.h1>
 
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ delay: 1, duration: 0.8 }}
-          className="mt-8 text-lg md:text-xl text-muted-foreground min-h-[2rem] flex items-center justify-center gap-2 flex-wrap"
+          transition={{ delay: 0.6, duration: 0.8 }}
+          className="mt-6 text-muted-foreground min-h-[2rem] flex items-center justify-center gap-1.5 flex-wrap"
         >
-          <span className="font-serif italic text-foreground/70">a</span>
+          <span className="font-serif italic text-foreground/40 text-sm">
+            a
+          </span>
           <Typewriter />
         </motion.div>
 
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: 15 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 1.3, duration: 0.7 }}
-          className="mt-12 flex flex-col sm:flex-row gap-4 justify-center items-center"
+          transition={{ delay: 0.8, duration: 0.6 }}
+          className="mt-14 flex flex-col sm:flex-row gap-6 justify-center items-center"
         >
+          {/* Button 1: Framed Outline Style */}
           <a
             href="#projects"
-            className="group inline-flex items-center gap-2 px-8 py-4 rounded-full bg-primary text-primary-foreground hover:shadow-glow transition-all duration-300"
+            className="group inline-flex items-center gap-2.5 px-7 py-3.5 rounded-full border border-primary/30 text-foreground/90 hover:text-foreground hover:bg-primary/10 hover:shadow-glow hover:border-primary/60 transition-all duration-300 font-sans tracking-wider text-xs uppercase font-medium"
           >
             View My Work
-            <ArrowUpRight className="w-4 h-4 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
+            <ArrowUpRight className="w-3.5 h-3.5 text-primary group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
           </a>
+
+          {/* Button 2: Modern Inline Core Link */}
           <a
             href="/SaumyaNeupane_CV.pdf"
             target="_blank"
             rel="noopener noreferrer"
-            className="group inline-flex items-center gap-2 px-8 py-4 rounded-full border border-foreground/20 hover:border-primary hover:bg-primary/5 transition-all"
+            className="group inline-flex items-center gap-2 px-6 py-3 text-muted-foreground hover:text-primary transition-colors duration-300 font-sans tracking-wider text-xs uppercase font-medium"
           >
-            <Download className="w-4 h-4" />
+            <FileText className="w-3.5 h-3.5" />
             View CV
           </a>
         </motion.div>
@@ -222,10 +212,10 @@ export const Hero = () => {
 
       <a
         href="#about"
-        className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 text-xs uppercase tracking-[0.3em] text-muted-foreground"
+        className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2.5 text-[10px] uppercase tracking-[0.4em] text-muted-foreground/60 hover:text-foreground transition-colors duration-300"
       >
         <span>scroll</span>
-        <ArrowDown className="w-4 h-4 animate-pulse-down text-primary" />
+        <ArrowDown className="w-3 h-3 text-primary/70 animate-bounce" />
       </a>
     </section>
   );
