@@ -208,16 +208,14 @@ export const Hero = () => {
             View My Work
             <ArrowUpRight className="w-4 h-4 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
           </a>
-
           <a
             href="/SaumyaNeupane_CV.pdf"
-            download="Saumya_Neupane_CV.pdf"
             target="_blank"
             rel="noopener noreferrer"
             className="group inline-flex items-center gap-2 px-8 py-4 rounded-full border border-foreground/20 hover:border-primary hover:bg-primary/5 transition-all"
           >
             <Download className="w-4 h-4" />
-            Download CV
+            View CV
           </a>
         </motion.div>
       </div>
