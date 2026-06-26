@@ -1,7 +1,7 @@
 import { motion, useInView } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
-import { Camera } from "lucide-react";
-import myPhoto from "@/assets/projects/saumya.jfif";
+import myPhoto from "@/assets/projects/my-photo.jpeg";
+import PixelImage from "@/components/sections/PixelImage";
 
 const Counter = ({ to, label }: { to: number; label: string }) => {
   const ref = useRef<HTMLDivElement>(null);
@@ -35,54 +35,6 @@ const Counter = ({ to, label }: { to: number; label: string }) => {
   );
 };
 
-const PhotoUpload = ({
-  caption,
-  className = "",
-  defaultSrc,
-}: {
-  caption: string;
-  className?: string;
-  defaultSrc?: string;
-}) => {
-  const [src, setSrc] = useState<string | null>(defaultSrc || null);
-  const inputRef = useRef<HTMLInputElement>(null);
-
-  return (
-    <div className={className}>
-      <button
-        type="button"
-        onClick={() => inputRef.current?.click()}
-        className="group relative block w-full aspect-[4/5] rounded-sm bg-card border border-border overflow-hidden shadow-soft hover:shadow-glow transition-all"
-      >
-        {src ? (
-          <img src={src} alt={caption} className="w-full h-full object-cover" />
-        ) : (
-          <div className="w-full h-full flex flex-col items-center justify-center text-muted-foreground p-6 text-center bg-gradient-warm">
-            <Camera className="w-8 h-8 mb-3 text-primary/70" />
-            <span className="text-xs uppercase tracking-widest">
-              Click to upload
-            </span>
-            <span className="text-xs mt-1 opacity-60">your photo</span>
-          </div>
-        )}
-      </button>
-      <input
-        ref={inputRef}
-        type="file"
-        accept="image/*"
-        className="hidden"
-        onChange={(e) => {
-          const f = e.target.files?.[0];
-          if (f) setSrc(URL.createObjectURL(f));
-        }}
-      />
-      <p className="font-hand text-xl text-center mt-3 text-foreground/70">
-        {caption}
-      </p>
-    </div>
-  );
-};
-
 export const About = () => {
   return (
     <section id="about" className="py-28 md:py-40 relative">
@@ -104,8 +56,20 @@ export const About = () => {
             transition={{ duration: 0.8 }}
             className="md:col-span-5"
           >
-            <div className="bg-card p-4 pb-2 shadow-soft max-w-[320px] mx-auto">
-              <PhotoUpload caption="That's me :)" defaultSrc={myPhoto} />
+            {/* The Pixel Image Card wrapper */}
+            <div className="bg-card p-4 pb-2 shadow-soft max-w-[320px] mx-auto flex flex-col items-center justify-center">
+              <div className="relative w-full aspect-[4/5] rounded-sm overflow-hidden flex items-center justify-center bg-black/5 dark:bg-white/5">
+                <PixelImage
+                  src={myPhoto}
+                  alt="Saumya Neupane"
+                  width={320}
+                  height={400}
+                  pixelSize={3}
+                />
+              </div>
+              <p className="font-hand text-xl text-center mt-3 text-foreground/70">
+                That's me :)
+              </p>
             </div>
           </motion.div>
 
