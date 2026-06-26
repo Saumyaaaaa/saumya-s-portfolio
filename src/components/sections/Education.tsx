@@ -74,17 +74,6 @@ export const Education = () => {
               ))}
             </div>
           </div>
-
-          <motion.div
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            viewport={{ once: true }}
-            transition={{ delay: 0.5 }}
-            className="mt-10 inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-primary/10 border border-primary/30 text-primary text-sm"
-          >
-            <Sparkles className="w-4 h-4" />
-            Actively seeking fully-funded MSc in Artificial Intelligence
-          </motion.div>
         </motion.div>
       </div>
     </section>
