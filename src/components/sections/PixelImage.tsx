@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState, useLayoutEffect } from "react";
 
 interface PixelImageProps {
   src: string;
@@ -9,12 +9,12 @@ interface PixelImageProps {
 }
 
 interface Pixel {
-  x: number; // Current X
-  y: number; // Current Y
-  ox: number; // Target Origin X
-  oy: number; // Target Origin Y
-  vx: number; // Velocity X
-  vy: number; // Velocity Y
+  x: number;
+  y: number;
+  ox: number;
+  oy: number;
+  vx: number;
+  vy: number;
   r: number;
   g: number;
   b: number;
@@ -23,51 +23,72 @@ interface Pixel {
 
 const PixelImage: React.FC<PixelImageProps> = ({
   src,
+  alt,
   width = 320,
   height = 400,
-  pixelSize = 3,
+  pixelSize = 4,
 }) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const mouseRef = useRef({ x: -1000, y: -1000, radius: 70 });
+  const mouseRef = useRef({ x: -9999, y: -9999, active: false });
+  const pixelsRef = useRef<Pixel[]>([]);
+  const isActiveRef = useRef(false);
+  const animationFrameRef = useRef<number | null>(null);
+  const hasDrawnInitialRef = useRef(false);
+  const [isLoaded, setIsLoaded] = useState(false);
+
+  // Use layout effect for immediate canvas setup
+  useLayoutEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+
+    const ctx = canvas.getContext("2d", { willReadFrequently: true });
+    if (!ctx) return;
+
+    const dpr = window.devicePixelRatio || 1;
+    canvas.width = width * dpr;
+    canvas.height = height * dpr;
+    canvas.style.width = `${width}px`;
+    canvas.style.height = `${height}px`;
+    ctx.scale(dpr, dpr);
+
+    return () => {
+      if (animationFrameRef.current)
+        cancelAnimationFrame(animationFrameRef.current);
+    };
+  }, [width, height]);
 
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
+
     const ctx = canvas.getContext("2d", { willReadFrequently: true });
     if (!ctx) return;
-
-    let animationFrameId: number;
-    let pixels: Pixel[] = [];
 
     const img = new Image();
     img.crossOrigin = "anonymous";
     img.src = src;
 
     img.onload = () => {
-      canvas.width = width;
-      canvas.height = height;
-      ctx.drawImage(img, 0, 0, width, height);
+      const tempCanvas = document.createElement("canvas");
+      const tempCtx = tempCanvas.getContext("2d", {
+        willReadFrequently: true,
+      })!;
 
-      const imgData = ctx.getImageData(0, 0, width, height).data;
-      ctx.clearRect(0, 0, width, height);
+      tempCanvas.width = width;
+      tempCanvas.height = height;
+      tempCtx.drawImage(img, 0, 0, width, height);
 
-      pixels = [];
+      const imgData = tempCtx.getImageData(0, 0, width, height).data;
+      const tempPixels: Pixel[] = [];
 
       for (let y = 0; y < height; y += pixelSize) {
         for (let x = 0; x < width; x += pixelSize) {
-          const index = (y * width + x) * 4;
+          const index = (Math.floor(y) * width + Math.floor(x)) * 4;
           const a = imgData[index + 3];
-
           if (a > 128) {
-            // Cool spawn logic: Pixels explode in from random off-screen coordinates
-            const angle = Math.random() * Math.PI * 2;
-            const distance = Math.random() * 300 + 200; // start way outside
-            const spawnX = x + Math.cos(angle) * distance;
-            const spawnY = y + Math.sin(angle) * distance;
-
-            pixels.push({
-              x: spawnX,
-              y: spawnY,
+            tempPixels.push({
+              x: x,
+              y: y,
               ox: x,
               oy: y,
               vx: 0,
@@ -75,88 +96,165 @@ const PixelImage: React.FC<PixelImageProps> = ({
               r: imgData[index],
               g: imgData[index + 1],
               b: imgData[index + 2],
-              a: a,
+              a,
             });
           }
         }
       }
-      animate();
+
+      pixelsRef.current = tempPixels;
+      hasDrawnInitialRef.current = true;
+      setIsLoaded(true);
+
+      // Force immediate perfect static draw
+      drawStatic(true);
+    };
+
+    const drawStatic = (resetPositions = false) => {
+      if (!ctx) return;
+      ctx.clearRect(0, 0, width, height);
+
+      const pixels = pixelsRef.current;
+      for (let i = 0; i < pixels.length; i++) {
+        const p = pixels[i];
+        if (resetPositions) {
+          p.x = p.ox;
+          p.y = p.oy;
+          p.vx = 0;
+          p.vy = 0;
+        }
+
+        ctx.fillStyle = `rgba(${p.r},${p.g},${p.b},${p.a / 255})`;
+        ctx.fillRect(Math.floor(p.x), Math.floor(p.y), pixelSize, pixelSize);
+      }
     };
 
     const animate = () => {
-      ctx.clearRect(0, 0, width, height);
-      const mouse = mouseRef.current;
-      const totalPixels = pixels.length;
+      if (!isActiveRef.current || !ctx || !hasDrawnInitialRef.current) return;
 
-      for (let i = 0; i < totalPixels; i++) {
+      ctx.clearRect(0, 0, width, height);
+      const pixels = pixelsRef.current;
+      const { x: mx, y: my } = mouseRef.current;
+      const RADIUS = 68;
+      const time = performance.now() * 0.006;
+      let anyMoving = false;
+
+      for (let i = 0; i < pixels.length; i++) {
         const p = pixels[i];
 
-        const dx = p.x - mouse.x;
-        const dy = p.y - mouse.y;
+        const dx = p.x - mx;
+        const dy = p.y - my;
         const dist = Math.sqrt(dx * dx + dy * dy);
 
-        // Interactive Liquid Ripple Hover
-        if (dist < mouse.radius) {
-          const force = (mouse.radius - dist) / mouse.radius;
-          const time = performance.now() * 0.007;
-          const wobbleX = Math.sin(time + p.oy) * 0.8;
-          const wobbleY = Math.cos(time + p.ox) * 0.8;
+        if (dist < RADIUS && dist > 0.001) {
+          const force = (RADIUS - dist) / RADIUS;
+          const wobbleX = Math.sin(time + p.oy * 0.04) * 0.6;
+          const wobbleY = Math.cos(time + p.ox * 0.04) * 0.6;
 
-          p.vx += (dx / dist) * force * 3 + wobbleX;
-          p.vy += (dy / dist) * force * 3 + wobbleY;
+          p.vx += (dx / dist) * force * 3.2 + wobbleX;
+          p.vy += (dy / dist) * force * 3.2 + wobbleY;
         }
 
-        // Magnetized Spring physics to snap into final destination position
-        const springForce = 0.04; // Slightly lighter so assembling looks smooth
-        const ax = (p.ox - p.x) * springForce;
-        const ay = (p.oy - p.y) * springForce;
+        p.vx += (p.ox - p.x) * 0.095;
+        p.vy += (p.oy - p.y) * 0.095;
 
-        p.vx += ax;
-        p.vy += ay;
-
-        p.vx *= 0.82; // Damping
-        p.vy *= 0.82;
+        p.vx *= 0.74;
+        p.vy *= 0.74;
 
         p.x += p.vx;
         p.y += p.vy;
 
-        ctx.fillStyle = `rgba(${p.r}, ${p.g}, ${p.b}, ${p.a / 255})`;
-        ctx.fillRect(p.x, p.y, pixelSize, pixelSize);
+        if (Math.abs(p.vx) > 0.025 || Math.abs(p.vy) > 0.025) {
+          anyMoving = true;
+        }
+
+        ctx.fillStyle = `rgba(${p.r},${p.g},${p.b},${p.a / 255})`;
+        ctx.fillRect(Math.floor(p.x), Math.floor(p.y), pixelSize, pixelSize);
       }
 
-      animationFrameId = requestAnimationFrame(animate);
+      if (!mouseRef.current.active && !anyMoving) {
+        isActiveRef.current = false;
+        drawStatic(true);
+        if (animationFrameRef.current) {
+          cancelAnimationFrame(animationFrameRef.current);
+          animationFrameRef.current = null;
+        }
+        return;
+      }
+
+      animationFrameRef.current = requestAnimationFrame(animate);
     };
 
-    const handleMouseMove = (e: MouseEvent) => {
+    const getCoords = (clientX: number, clientY: number) => {
       const rect = canvas.getBoundingClientRect();
-      mouseRef.current.x = e.clientX - rect.left;
-      mouseRef.current.y = e.clientY - rect.top;
+      return {
+        x: ((clientX - rect.left) / rect.width) * width,
+        y: ((clientY - rect.top) / rect.height) * height,
+      };
     };
 
-    const handleMouseLeave = () => {
-      mouseRef.current.x = -1000;
-      mouseRef.current.y = -1000;
+    const startInteraction = (clientX: number, clientY: number) => {
+      const coords = getCoords(clientX, clientY);
+      mouseRef.current = { ...coords, active: true };
+      if (!isActiveRef.current) {
+        isActiveRef.current = true;
+        animate();
+      }
     };
 
-    canvas.addEventListener("mousemove", handleMouseMove);
-    canvas.addEventListener("mouseleave", handleMouseLeave);
+    const updateInteraction = (clientX: number, clientY: number) => {
+      const coords = getCoords(clientX, clientY);
+      mouseRef.current = { ...coords, active: true };
+    };
+
+    const endInteraction = () => {
+      mouseRef.current.active = false;
+    };
+
+    const onMouseEnter = (e: MouseEvent) =>
+      startInteraction(e.clientX, e.clientY);
+    const onMouseMove = (e: MouseEvent) =>
+      updateInteraction(e.clientX, e.clientY);
+    const onMouseLeave = () => endInteraction();
+
+    const onTouchStart = (e: TouchEvent) => {
+      e.preventDefault();
+      startInteraction(e.touches[0].clientX, e.touches[0].clientY);
+    };
+    const onTouchMove = (e: TouchEvent) => {
+      e.preventDefault();
+      if (mouseRef.current.active)
+        updateInteraction(e.touches[0].clientX, e.touches[0].clientY);
+    };
+    const onTouchEnd = () => endInteraction();
+
+    canvas.addEventListener("mouseenter", onMouseEnter);
+    canvas.addEventListener("mousemove", onMouseMove);
+    canvas.addEventListener("mouseleave", onMouseLeave);
+    canvas.addEventListener("touchstart", onTouchStart, { passive: false });
+    canvas.addEventListener("touchmove", onTouchMove, { passive: false });
+    canvas.addEventListener("touchend", onTouchEnd, { passive: false });
 
     return () => {
-      cancelAnimationFrame(animationFrameId);
-      canvas.removeEventListener("mousemove", handleMouseMove);
-      canvas.removeEventListener("mouseleave", handleMouseLeave);
+      if (animationFrameRef.current)
+        cancelAnimationFrame(animationFrameRef.current);
+      canvas.removeEventListener("mouseenter", onMouseEnter);
+      canvas.removeEventListener("mousemove", onMouseMove);
+      canvas.removeEventListener("mouseleave", onMouseLeave);
+      canvas.removeEventListener("touchstart", onTouchStart);
+      canvas.removeEventListener("touchmove", onTouchMove);
+      canvas.removeEventListener("touchend", onTouchEnd);
     };
   }, [src, width, height, pixelSize]);
 
   return (
     <canvas
       ref={canvasRef}
-      className="cursor-pointer block max-w-full h-auto object-contain"
-      style={{
-        width,
-        height,
-        imageRendering: "pixelated",
-      }}
+      aria-label={alt}
+      role="img"
+      className={`block max-w-full cursor-crosshair select-none transition-opacity duration-100 ${
+        isLoaded ? "opacity-100" : "opacity-0"
+      }`}
     />
   );
 };

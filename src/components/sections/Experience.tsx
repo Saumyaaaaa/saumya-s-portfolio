@@ -18,7 +18,7 @@ type ExpItem = {
 
 const items: ExpItem[] = [
   {
-    org: "Bidhee Pvt. Ltd.",
+    org: "Bidhee Group",
     role: "QA Analyst",
     period: "Mar 2026 — Present",
     category: "Professional",
