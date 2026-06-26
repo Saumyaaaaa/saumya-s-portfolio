@@ -87,19 +87,12 @@ export const About = () => {
 
             <div className="mt-8 space-y-5 text-lg text-foreground/80 leading-relaxed">
               <p>
-                I just finished my Bachelor's in Computer Science and I'm
-                currently working as a{" "}
-                <span className="text-primary">QA Analyst</span>. I'm passionate
-                about AI and actively seeking a{" "}
-                <span className="font-medium text-foreground">
-                  fully-funded Master's scholarship in Artificial Intelligence
-                </span>
-                .
-              </p>
-              <p>
-                Outside tech, I run an Instagram &amp; TikTok store called{" "}
-                <em>GiftsJoyy</em>, volunteer with <em>Lions Club Kathmandu</em>
-                , and love meeting people through <em>Code for Change</em>.
+                As a Computer Science graduate and current{" "}
+                <span className="text-primary font-medium">QA Analyst</span>, my
+                professional focus is shifting toward the future of
+                intelligence. I spend my time exploring modern AI evaluation
+                methodologies and advanced frameworks, refining my expertise to
+                transition into dedicated research ecosystems.
               </p>
             </div>
 
