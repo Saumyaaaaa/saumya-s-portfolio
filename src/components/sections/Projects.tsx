@@ -40,7 +40,7 @@ const projects: Project[] = [
     description:
       "AI-powered detector exploring early signals of mental health concerns from text.",
     details:
-      "Experimenting with NLP techniques and lightweight ML models — part of my path toward a Masters in Artificial Intelligence.",
+      "Experimenting with NLP techniques and lightweight ML models. Built a prototype to analyze text inputs for potential mental health indicators, aiming to provide early support and resources.",
     github: "https://github.com/Saumyaaaaa/mental-health-ai-detector",
     image: healthImg,
     size: "md",
