@@ -18,15 +18,39 @@ const Index = () => {
       <CustomCursor />
       <Navbar />
       <main>
-        <Hero />
-        <About />
-        <Experience />
+        <section id="home">
+          <Hero />
+        </section>
+
+        <section id="about">
+          <About />
+        </section>
+
+        <section id="experience">
+          <Experience />
+        </section>
+
         <TechMarquee />
-        <Education />
-        <Projects />
-        <Skills />
-        <Life />
-        <Contact />
+
+        <section id="education">
+          <Education />
+        </section>
+
+        <section id="projects">
+          <Projects />
+        </section>
+
+        <section id="skills">
+          <Skills />
+        </section>
+
+        <section id="life">
+          <Life />
+        </section>
+
+        <section id="contact">
+          <Contact />
+        </section>
       </main>
     </div>
   );

@@ -32,7 +32,7 @@ export const TechMarquee = () => {
   return (
     <section className="py-10 border-y border-border/40 bg-secondary/20">
       <p className="text-center text-[10px] uppercase tracking-[0.4em] text-muted-foreground mb-6">
-        Tools & Technologies
+        Tools & Technologies I am familiar with
       </p>
       <div
         className="overflow-hidden w-full"
