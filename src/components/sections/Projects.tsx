@@ -5,8 +5,6 @@ import ngoImg from "@/assets/projects/ngo.jpg";
 import youtubeImg from "@/assets/projects/youtube.jpg";
 import hostel from "@/assets/projects/hostel.webp";
 import healthImg from "@/assets/projects/healthImg.png";
-import portfolio from "@/assets/projects/portfolio.png";
-
 
 type Project = {
   title: string;
@@ -67,18 +65,6 @@ const projects: Project[] = [
     github: "https://github.com/Saumyaaaaa/youtube_clone",
     live: "https://youtube-clone-phi-fawn.vercel.app",
     image: youtubeImg,
-    size: "md",
-  },
-  {
-    title: "Old Portfolio (v1)",
-    date: "Mar 2025",
-    stack: ["React", "EmailJS", "CSS"],
-    description: "My first personal portfolio — where this story began.",
-    details:
-      "Kept here as a love letter to first attempts. Built with React and EmailJS before evolving into the site you're on now.",
-    github: "https://github.com/Saumyaaaaa/portfolio_",
-    live:"https://portfolio-eight-taupe-82.vercel.app/",
-    image:portfolio,
     size: "md",
   },
 ];
