@@ -49,20 +49,22 @@ export const Navbar = () => {
   return (
     <header
       className={`fixed top-0 inset-x-0 z-50 transition-all duration-500 ${
-        scrolled ? "py-3 glass shadow-soft" : "py-6 bg-transparent"
+        scrolled 
+          ? "py-3 bg-[#0a192f]/90 backdrop-blur-md border-b border-white/10 shadow-lg" 
+          : "py-6 bg-transparent"
       }`}
     >
-      <nav className="container mx-auto flex items-center justify-between px-4">
+      <nav className="container mx-auto flex items-center justify-between px-6">
         {/* Logo */}
         <a
           href="#home"
           onClick={(e) => handleNavClick(e, "#home")}
           className="group flex items-center gap-2"
         >
-          <span className="font-serif text-2xl tracking-tight text-foreground">
-            <span className="text-primary">S</span>N
+          <span className="font-serif text-2xl tracking-tight text-white">
+            <span className="text-amber-200">S</span>N
           </span>
-          <span className="hidden sm:inline-block w-1.5 h-1.5 rounded-full bg-primary group-hover:scale-150 transition-transform" />
+          <span className="hidden sm:inline-block w-1.5 h-1.5 rounded-full bg-amber-200 group-hover:scale-150 transition-transform" />
         </a>
 
         {/* Desktop Navigation Links */}
@@ -72,10 +74,10 @@ export const Navbar = () => {
               <a
                 href={l.href}
                 onClick={(e) => handleNavClick(e, l.href)}
-                className="relative px-4 py-2 text-sm text-foreground/75 hover:text-foreground transition-colors group"
+                className="relative px-4 py-2 text-sm font-medium text-slate-300 hover:text-white transition-colors group"
               >
                 {l.label}
-                <span className="absolute left-4 right-4 bottom-1 h-px bg-primary scale-x-0 origin-left group-hover:scale-x-100 transition-transform duration-300" />
+                <span className="absolute left-4 right-4 bottom-1 h-px bg-amber-200 scale-x-0 origin-left group-hover:scale-x-100 transition-transform duration-300" />
               </a>
             </li>
           ))}
@@ -84,7 +86,7 @@ export const Navbar = () => {
         {/* Mobile Hamburger Button */}
         <div className="flex items-center md:hidden">
           <button
-            className="w-10 h-10 rounded-full border border-border flex items-center justify-center text-foreground hover:bg-primary/5 active:scale-95 transition-all z-50"
+            className="w-10 h-10 rounded-full border border-white/10 flex items-center justify-center text-slate-300 hover:text-white hover:bg-white/5 active:scale-95 transition-all z-50"
             onClick={() => setOpen((o) => !o)}
             aria-label="Toggle Menu"
           >
@@ -102,7 +104,7 @@ export const Navbar = () => {
             animate={{ height: "auto", opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}
             transition={{ duration: 0.3, ease: "easeInOut" }}
-            className="md:hidden overflow-hidden absolute top-full left-0 w-full bg-neutral-950/95 backdrop-blur-md border-b border-t border-border/50 z-50 shadow-2xl"
+            className="md:hidden overflow-hidden absolute top-full left-0 w-full bg-[#0a192f]/95 backdrop-blur-md border-b border-white/10 z-50 shadow-2xl"
           >
             <ul className="container mx-auto py-6 px-6 flex flex-col gap-2">
               {links.map((l) => (
@@ -110,7 +112,7 @@ export const Navbar = () => {
                   <a
                     href={l.href}
                     onClick={(e) => handleNavClick(e, l.href)}
-                    className="block px-4 py-3 rounded-lg text-lg text-foreground/80 hover:text-foreground hover:bg-white/5 active:bg-white/10 transition-all duration-200"
+                    className="block px-4 py-3 rounded-lg text-lg font-medium text-slate-200 hover:text-white hover:bg-white/5 active:bg-white/10 transition-all duration-200"
                   >
                     {l.label}
                   </a>
