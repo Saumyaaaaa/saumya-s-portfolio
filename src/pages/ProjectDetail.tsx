@@ -129,7 +129,7 @@ export const projectsData: Project[] = [
     slug: "eco-himalaya-hub",
     title: "Eco Himalaya Hub",
     subtitle: "Environmental initiative and advocacy platform",
-    date: "Nov 2024",
+    date: "2024",
     stack: ["React", "Tailwind", "Vercel"],
     description:
       "NGO website spotlighting eco-conscious initiatives in the Himalayas.",
@@ -177,11 +177,16 @@ export const ProjectDetail = () => {
   }
 
   const handleBack = () => {
-    // Return to the exact prior scroll position
     if (window.history.state && window.history.state.idx > 0) {
       navigate(-1);
     } else {
       navigate("/");
+      setTimeout(() => {
+        const el = document.getElementById("projects");
+        if (el) {
+          el.scrollIntoView({ behavior: "smooth" });
+        }
+      }, 100);
     }
   };
 
