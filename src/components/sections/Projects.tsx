@@ -1,96 +1,13 @@
-import { motion, AnimatePresence } from "framer-motion";
-import { useState } from "react";
-import { Github, ExternalLink, Plus, Image as ImageIcon } from "lucide-react";
-import ngoImg from "@/assets/projects/ngo.jpg";
-import youtubeImg from "@/assets/projects/youtube.jpg";
-import neuroqaImg from "@/assets/projects/neuro_qa.png";
-import locusLabImg from "@/assets/projects/locus-lab.png";
-import tomImg from "@/assets/projects/tom.png";
-
-type Project = {
-  title: string;
-  date: string;
-  stack: string[];
-  description: string;
-  details: string;
-  github?: string;
-  live?: string;
-  image?: string;
-  size: "lg" | "md";
-};
-
-const projects: Project[] = [
-  {
-    title: "Learner-State Scaffolding Tutor (Theory of Mind)",
-    date: "Oct 2026",
-    stack: ["Python", "FastAPI", "Gemini Flash", "Next.js", "SQLite", "BKT"],
-    description:
-      "Monitor-constrained dual-agent system delivering Socratic tutoring steered by Bayesian Knowledge Tracing.",
-    details:
-      "Decoupled architecture utilizing a hidden 'Modeler' agent to map cognitive state and deterministically constrain a user-facing Socratic 'Interlocutor'. Features a mathematical BKT engine, a pure-Python mechanical verification layer guaranteeing 0.00% vocabulary leakage, a counterfactual concept graph debugging UI, and an empirical evaluation suite tested against adversarial student personas.",
-    github: "https://github.com/Saumyaaaaa/Theory-of-mind--TOM-",
-    live: "https://theory-of-mind-tom.vercel.app/",
-    image: tomImg,
-    size: "md",
-  },
-  {
-    title: "NeuroQA: Explainable EEG Artifact Detection",
-    date: "Sep 2026",
-    stack: ["PyTorch", "Python", "MNE-Python", "FastAPI", "Streamlit", "ONNX"],
-    description:
-      "Research-grade spatial-temporal Vision Transformer for automated and interpretable EEG artifact rejection.",
-    details:
-      "Trained a custom spatial-temporal ViT on 2s overlapping windows, featuring an Attention Rollout explainability layer for clinical time-window reporting. Engineered a DSP preprocessing pipeline (zero-phase Butterworth and notch filters) and production-grade MLOps with automated CI, comprehensive pytest suites, and a lightweight 0.38MB ONNX export.",
-    github: "https://github.com/Saumyaaaaa/neuroqa",
-    live: "https://neuroapp.streamlit.app/",
-    image: neuroqaImg,
-    size: "md",
-  },
-  {
-    title: "Locus Lab: 3D Memory Palace Experiment",
-    date: "Oct 2026",
-    stack: [
-      "React",
-      "TypeScript",
-      "Three.js",
-      "Zustand",
-      "Supabase",
-      "PostgreSQL",
-    ],
-    description:
-      "Citizen-science platform running browser-based A/B memory tests comparing the method of loci to flashcards.",
-    details:
-      "Engineered an interactive low-poly 3D environment using react-three-fiber for spatial word encoding. Built a multi-stage experiment state machine in Zustand, anonymous privacy-first persistence with Supabase RLS, Levenshtein-based automated recall scoring, and personalized SVG retention dashboards.",
-    github: "https://github.com/Saumyaaaaa/LocusLab",
-    live: "https://locus-lab-three.vercel.app/",
-    image: locusLabImg,
-    size: "md",
-  },
-  {
-    title: "Eco Himalaya Hub",
-    date: "2024",
-    stack: ["React", "Tailwind", "Vercel"],
-    description:
-      "NGO website spotlighting eco-conscious initiatives in the Himalayas.",
-    details:
-      "Designed and developed a content-driven site for an environmental NGO with a focus on storytelling and accessibility.",
-    live: "https://ecohimalayahub.vercel.app/",
-    image: ngoImg,
-    size: "md",
-  },
-  {
-    title: "YouTube Clone",
-    date: "Aug 2024",
-    stack: ["React", "REST APIs", "Tailwind"],
-    description: "Dynamic video search with responsive component architecture.",
-    details:
-      "Built a clean, responsive UI consuming a public video API with reusable components and search-driven navigation.",
-    github: "https://github.com/Saumyaaaaa/youtube_clone",
-    live: "https://youtube-clone-phi-fawn.vercel.app",
-    image: youtubeImg,
-    size: "md",
-  },
-];
+import { motion } from "framer-motion";
+import { useNavigate } from "react-router-dom";
+import {
+  Github,
+  ExternalLink,
+  Plus,
+  ArrowUpRight,
+  Image as ImageIcon,
+} from "lucide-react";
+import { projectsData, Project } from "@/pages/ProjectDetail";
 
 const MockBrowser = ({ image, title }: { image?: string; title: string }) => (
   <div className="aspect-video w-full rounded-xl overflow-hidden border border-border bg-gradient-warm relative flex flex-col">
@@ -114,31 +31,26 @@ const MockBrowser = ({ image, title }: { image?: string; title: string }) => (
   </div>
 );
 
-const Card = ({
-  p,
-  expanded,
-  onToggle,
-}: {
-  p: Project;
-  expanded: boolean;
-  onToggle: () => void;
-}) => {
+const Card = ({ p }: { p: Project }) => {
+  const navigate = useNavigate();
+
   return (
     <motion.div
       layout
-      onClick={onToggle}
-      className={`group relative rounded-3xl border border-border bg-card p-6 md:p-8 hover:shadow-glow transition-shadow ${
+      onClick={() => navigate(`/projects/${p.slug}`)}
+      className={`group relative rounded-3xl border border-border bg-card p-6 md:p-8 hover:shadow-glow transition-all cursor-pointer ${
         p.size === "lg" ? "md:col-span-2" : ""
       }`}
       whileHover={{ y: -4 }}
     >
-      <motion.div layout="position">
+      <div>
         <MockBrowser image={p.image} title={p.title} />
+
         <div className="mt-6 flex items-center justify-between gap-3">
           <p className="text-xs uppercase tracking-widest text-muted-foreground">
             {p.date}
           </p>
-          <div className="flex gap-2">
+          <div className="flex items-center gap-2">
             {p.github && (
               <a
                 href={p.github}
@@ -146,6 +58,7 @@ const Card = ({
                 rel="noreferrer"
                 onClick={(e) => e.stopPropagation()}
                 className="p-2 rounded-full border border-border hover:border-primary hover:text-primary transition-colors"
+                title="View GitHub Repository"
               >
                 <Github className="w-4 h-4" />
               </a>
@@ -157,16 +70,23 @@ const Card = ({
                 rel="noreferrer"
                 onClick={(e) => e.stopPropagation()}
                 className="p-2 rounded-full border border-border hover:border-primary hover:text-primary transition-colors"
+                title="Open Live Preview"
               >
                 <ExternalLink className="w-4 h-4" />
               </a>
             )}
+            <span className="p-2 rounded-full border border-border group-hover:border-primary group-hover:text-primary transition-colors">
+              <ArrowUpRight className="w-4 h-4" />
+            </span>
           </div>
         </div>
-        <h3 className="font-serif text-2xl md:text-3xl mt-3 leading-tight">
+
+        <h3 className="font-serif text-2xl md:text-3xl mt-3 leading-tight group-hover:text-primary transition-colors">
           {p.title}
         </h3>
+
         <p className="mt-2 text-foreground/70">{p.description}</p>
+
         <div className="mt-4 flex flex-wrap gap-2">
           {p.stack.map((s) => (
             <span
@@ -177,30 +97,12 @@ const Card = ({
             </span>
           ))}
         </div>
-      </motion.div>
-
-      <AnimatePresence>
-        {expanded && (
-          <motion.div
-            initial={{ opacity: 0, height: 0, marginTop: 0 }}
-            animate={{ opacity: 1, height: "auto", marginTop: 24 }}
-            exit={{ opacity: 0, height: 0, marginTop: 0 }}
-            transition={{ duration: 0.4 }}
-            className="overflow-hidden"
-          >
-            <div className="pt-6 border-t border-border text-foreground/75 leading-relaxed">
-              {p.details}
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+      </div>
     </motion.div>
   );
 };
 
 export const Projects = () => {
-  const [open, setOpen] = useState<number | null>(null);
-
   return (
     <section id="projects" className="py-28 md:py-36">
       <div className="container">
@@ -212,14 +114,10 @@ export const Projects = () => {
         </h2>
 
         <div className="grid md:grid-cols-2 gap-6">
-          {projects.map((p, i) => (
-            <Card
-              key={p.title}
-              p={p}
-              expanded={open === i}
-              onToggle={() => setOpen(open === i ? null : i)}
-            />
+          {projectsData.map((p) => (
+            <Card key={p.slug} p={p} />
           ))}
+
           <div className="rounded-3xl border-2 border-dashed border-border p-10 flex flex-col items-center justify-center text-muted-foreground min-h-[260px] hover:border-primary/50 hover:text-primary transition-colors">
             <Plus className="w-8 h-8 mb-3" />
             <p className="font-serif text-2xl">More projects</p>
