@@ -104,7 +104,7 @@ const Card = ({ p }: { p: Project }) => {
 
 export const Projects = () => {
   return (
-    <section id="projects" className="py-28 md:py-36">
+    <section id="projects" className="py-28 md:py-36 scroll-mt-16">
       <div className="container">
         <p className="text-xs uppercase tracking-[0.4em] text-primary mb-4">
           — selected work

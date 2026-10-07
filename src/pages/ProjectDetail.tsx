@@ -1,4 +1,4 @@
-import { useParams, Link, Navigate } from "react-router-dom";
+import { useParams, useNavigate, Navigate } from "react-router-dom";
 import { ArrowLeft, Github, ExternalLink, Calendar, Code2 } from "lucide-react";
 import { motion } from "framer-motion";
 
@@ -129,7 +129,7 @@ export const projectsData: Project[] = [
     slug: "eco-himalaya-hub",
     title: "Eco Himalaya Hub",
     subtitle: "Environmental initiative and advocacy platform",
-    date: "2024",
+    date: "Nov 2024",
     stack: ["React", "Tailwind", "Vercel"],
     description:
       "NGO website spotlighting eco-conscious initiatives in the Himalayas.",
@@ -169,22 +169,33 @@ export const projectsData: Project[] = [
 
 export const ProjectDetail = () => {
   const { slug } = useParams<{ slug: string }>();
+  const navigate = useNavigate();
   const project = projectsData.find((p) => p.slug === slug);
 
   if (!project) {
-    return <Navigate to="/#projects" replace />;
+    return <Navigate to="/" replace />;
   }
+
+  const handleBack = () => {
+    // Return to the exact prior scroll position
+    if (window.history.state && window.history.state.idx > 0) {
+      navigate(-1);
+    } else {
+      navigate("/");
+    }
+  };
 
   return (
     <div className="min-h-screen py-24 md:py-32">
       <div className="container max-w-4xl px-4 mx-auto">
-        <Link
-          to="/#projects"
-          className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-primary transition-colors mb-8 group"
+        <button
+          type="button"
+          onClick={handleBack}
+          className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-primary transition-colors mb-8 group cursor-pointer focus:outline-none"
         >
           <ArrowLeft className="w-4 h-4 transition-transform group-hover:-translate-x-1" />
           Back to Projects
-        </Link>
+        </button>
 
         {/* Header */}
         <motion.div
