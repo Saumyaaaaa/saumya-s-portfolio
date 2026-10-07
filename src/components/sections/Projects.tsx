@@ -3,8 +3,9 @@ import { useState } from "react";
 import { Github, ExternalLink, Plus, Image as ImageIcon } from "lucide-react";
 import ngoImg from "@/assets/projects/ngo.jpg";
 import youtubeImg from "@/assets/projects/youtube.jpg";
-import hostel from "@/assets/projects/hostel.webp";
-import healthImg from "@/assets/projects/healthImg.png";
+import neuroqaImg from "@/assets/projects/neuro_qa.png";
+import locusLabImg from "@/assets/projects/locus-lab.png";
+import tomImg from "@/assets/projects/tom.png";
 
 type Project = {
   title: string;
@@ -20,27 +21,49 @@ type Project = {
 
 const projects: Project[] = [
   {
-    title: "Hostel Rental Management System",
-    date: "Jan 2025",
-    stack: ["MongoDB", "Express", "React", "Node.js"],
+    title: "Learner-State Scaffolding Tutor (Theory of Mind)",
+    date: "Oct 2026",
+    stack: ["Python", "FastAPI", "Gemini Flash", "Next.js", "SQLite", "BKT"],
     description:
-      "Full-stack MERN platform with role-based access for admin, owner, and student.",
+      "Monitor-constrained dual-agent system delivering Socratic tutoring steered by Bayesian Knowledge Tracing.",
     details:
-      "Designed REST APIs, booking logic, and authentication flows. Handled backend debugging and database modeling for a real-world rental workflow.",
-    github: "https://github.com/Saumyaaaaa/RoomBooking",
-    image: hostel,
+      "Decoupled architecture utilizing a hidden 'Modeler' agent to map cognitive state and deterministically constrain a user-facing Socratic 'Interlocutor'. Features a mathematical BKT engine, a pure-Python mechanical verification layer guaranteeing 0.00% vocabulary leakage, a counterfactual concept graph debugging UI, and an empirical evaluation suite tested against adversarial student personas.",
+    github: "https://github.com/Saumyaaaaa/Theory-of-mind--TOM-",
+    live: "https://theory-of-mind-tom.vercel.app/",
+    image: tomImg,
     size: "md",
   },
   {
-    title: "Mental Health AI Detector",
-    date: "Mar 2026",
-    stack: ["Python", "ML", "NLP"],
+    title: "NeuroQA: Explainable EEG Artifact Detection",
+    date: "Sep 2026",
+    stack: ["PyTorch", "Python", "MNE-Python", "FastAPI", "Streamlit", "ONNX"],
     description:
-      "AI-powered detector exploring early signals of mental health concerns from text.",
+      "Research-grade spatial-temporal Vision Transformer for automated and interpretable EEG artifact rejection.",
     details:
-      "Experimenting with NLP techniques and lightweight ML models. Built a prototype to analyze text inputs for potential mental health indicators, aiming to provide early support and resources.",
-    github: "https://github.com/Saumyaaaaa/mental-health-ai-detector",
-    image: healthImg,
+      "Trained a custom spatial-temporal ViT on 2s overlapping windows, featuring an Attention Rollout explainability layer for clinical time-window reporting. Engineered a DSP preprocessing pipeline (zero-phase Butterworth and notch filters) and production-grade MLOps with automated CI, comprehensive pytest suites, and a lightweight 0.38MB ONNX export.",
+    github: "https://github.com/Saumyaaaaa/neuroqa",
+    live: "https://neuroapp.streamlit.app/",
+    image: neuroqaImg,
+    size: "md",
+  },
+  {
+    title: "Locus Lab: 3D Memory Palace Experiment",
+    date: "Oct 2026",
+    stack: [
+      "React",
+      "TypeScript",
+      "Three.js",
+      "Zustand",
+      "Supabase",
+      "PostgreSQL",
+    ],
+    description:
+      "Citizen-science platform running browser-based A/B memory tests comparing the method of loci to flashcards.",
+    details:
+      "Engineered an interactive low-poly 3D environment using react-three-fiber for spatial word encoding. Built a multi-stage experiment state machine in Zustand, anonymous privacy-first persistence with Supabase RLS, Levenshtein-based automated recall scoring, and personalized SVG retention dashboards.",
+    github: "https://github.com/Saumyaaaaa/LocusLab",
+    live: "https://locus-lab-three.vercel.app/",
+    image: locusLabImg,
     size: "md",
   },
   {
