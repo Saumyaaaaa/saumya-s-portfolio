@@ -5,46 +5,8 @@
 @tailwind utilities;
 
 @layer base {
-  :root {
-    /* Sophisticated Editorial Light Mode */
-    --background: 40 20% 96%;           /* Chalky linen background */
-    --foreground: 224 60% 8%;           /* Hard charcoal navy */
-
-    --card: 40 15% 93%;
-    --card-foreground: 224 60% 8%;
-
-    --popover: 40 20% 96%;
-    --popover-foreground: 224 60% 8%;
-
-    --primary: 35 30% 45%;              /* Burnished bronze */
-    --primary-foreground: 40 20% 96%;
-
-    --secondary: 220 10% 90%;
-    --secondary-foreground: 224 60% 8%;
-
-    --muted: 220 10% 88%;
-    --muted-foreground: 224 15% 40%;
-
-    --accent: 35 30% 45%;
-    --accent-foreground: 40 20% 96%;
-
-    --border: 220 15% 83%;
-    --input: 220 15% 83%;
-    --ring: 35 30% 45%;
-
-    --radius: 0.375rem;                 /* Sharper corners look premium */
-
-    --gradient-orb: radial-gradient(circle, rgba(196, 178, 149, 0.08), transparent 70%);
-    --shadow-soft: 0 30px 60px -15px rgba(15, 23, 42, 0.04);
-    --shadow-glow: 0 0 40px rgba(196, 178, 149, 0.15);
-
-    --font-serif: 'Cormorant Garamond', serif;
-    --font-sans: 'DM Sans', system-ui, sans-serif;
-    --font-hand: 'Caveat', cursive;
-  }
-
-  .dark {
-    /* Premium Midnight Obsidian & Antique Gold Palette */
+  /* Enforce Premium Midnight Obsidian & Antique Gold Palette universally */
+  :root, .dark {
     --background: 224 71% 4%;           /* #030712 deep luxury midnight navy */
     --foreground: 210 40% 98%;          /* Ice white typography */
 
@@ -70,9 +32,15 @@
     --input: 223 47% 14%;
     --ring: 35 40% 70%;
 
+    --radius: 0.375rem;                 /* Sharper premium corners */
+
     --gradient-orb: radial-gradient(circle, rgba(196, 178, 149, 0.12), transparent 75%);
     --shadow-soft: 0 40px 80px -20px rgba(0, 0, 0, 0.6);
     --shadow-glow: 0 0 50px rgba(196, 178, 149, 0.18);
+
+    --font-serif: 'Cormorant Garamond', serif;
+    --font-sans: 'DM Sans', system-ui, sans-serif;
+    --font-hand: 'Caveat', cursive;
   }
 }
 
@@ -83,6 +51,7 @@
 
   html {
     scroll-behavior: smooth;
+    background-color: hsl(224 71% 4%) !important;
   }
 
   body {
@@ -90,6 +59,7 @@
     font-family: var(--font-sans);
     font-feature-settings: "ss01", "cv11";
     -webkit-font-smoothing: antialiased;
+    background-color: hsl(224 71% 4%) !important;
   }
 
   /* Thin, elegant, architectural spacing for titles */

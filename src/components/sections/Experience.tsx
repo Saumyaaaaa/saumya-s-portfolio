@@ -20,7 +20,7 @@ const items: ExpItem[] = [
   {
     org: "Bidhee Group",
     role: "QA Analyst",
-    period: "Mar 2026 — Present",
+    period: "Mar 2026 — Sept 2026",
     category: "Professional",
     current: true,
     logo: bidheeLogo,

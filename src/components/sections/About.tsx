@@ -97,8 +97,8 @@ export const About = () => {
             </div>
 
             <div className="mt-10 grid grid-cols-2 md:grid-cols-4 gap-6 py-6 border-y border-border">
-              <Counter to={2} label="Companies" />
-              <Counter to={4} label="Projects+" />
+              <Counter to={3} label="Companies" />
+              <Counter to={20} label="Projects+" />
               <Counter to={1} label="Lions Club" />
               <Counter to={1} label="Online Store" />
             </div>

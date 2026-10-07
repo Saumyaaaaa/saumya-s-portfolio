@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { Navbar } from "@/components/Navbar";
 import { CustomCursor } from "@/components/CustomCursor";
 import { SmoothScroll } from "@/components/SmoothScroll";
@@ -12,6 +13,33 @@ import { Life } from "@/components/sections/Life";
 import { Contact } from "@/components/sections/Contact";
 
 const Index = () => {
+  useEffect(() => {
+    // Select all sections that have an id
+    const sections = document.querySelectorAll("section[id]");
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            const id = entry.target.getAttribute("id");
+            if (id === "home" || window.scrollY < 250) {
+              window.history.replaceState(null, "", window.location.pathname);
+            } else if (id) {
+              window.history.replaceState(null, "", `#${id}`);
+            }
+          }
+        });
+      },
+      {
+        rootMargin: "-30% 0px -60% 0px",
+      },
+    );
+
+    sections.forEach((section) => observer.observe(section));
+
+    return () => observer.disconnect();
+  }, []);
+
   return (
     <div className="relative min-h-screen bg-background text-foreground overflow-x-hidden">
       <SmoothScroll />

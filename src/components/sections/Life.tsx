@@ -1,6 +1,7 @@
-import { motion } from "framer-motion";
-import { Camera } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
+import { Camera, RotateCcw, Bug } from "lucide-react";
 import { useRef, useState } from "react";
+import { toast } from "sonner";
 import graduationPhoto from "@/assets/projects/graduation.jfif";
 import bajraPhoto from "@/assets/projects/bajra.jfif";
 import cfcPhoto from "@/assets/projects/cfc.jfif";
@@ -51,7 +52,47 @@ const PhotoSlot = ({
   style?: React.CSSProperties;
 }) => {
   const [src, setSrc] = useState<string | null>(defaultSrc || null);
+  const [isCustom, setIsCustom] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
+
+  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      setSrc(URL.createObjectURL(file));
+      setIsCustom(true);
+
+      // Pops up only AFTER they upload, turning their "bug discovery" into the Easter egg
+      toast.custom(
+        () => (
+          <div className="bg-card border-2 border-primary/50 text-foreground p-4 rounded-2xl shadow-xl flex items-start gap-3 max-w-sm">
+            <span className="p-2 rounded-xl bg-primary/10 text-primary shrink-0">
+              <Bug className="w-5 h-5" />
+            </span>
+            <div>
+              <p className="font-serif font-bold text-base text-primary">
+                🐛 Congratulations, you found the bug!
+              </p>
+              <p className="text-xs text-foreground/80 mt-1 leading-relaxed">
+                ...or did you? As someone in QA, I intentionally left this
+                client-side upload here as a playful Easter egg for curious
+                visitors. Your image only lives in your browser's local memory
+                and vanishes on refresh!
+              </p>
+            </div>
+          </div>
+        ),
+        { duration: 7000 },
+      );
+    }
+  };
+
+  const resetPhoto = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    setSrc(defaultSrc || null);
+    setIsCustom(false);
+    if (inputRef.current) inputRef.current.value = "";
+    toast.info("Restored original photo.");
+  };
 
   return (
     <motion.div
@@ -59,12 +100,12 @@ const PhotoSlot = ({
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "-50px" }}
       transition={{ delay: index * 0.06, duration: 0.6 }}
-      className="break-inside-avoid mb-6"
+      className="break-inside-avoid mb-6 relative group"
     >
       <button
         type="button"
         onClick={() => inputRef.current?.click()}
-        className={`group relative block w-full ${hClass} rounded-2xl border-2 border-dashed border-border bg-card overflow-hidden hover:border-primary/60 transition-colors`}
+        className={`group relative block w-full ${hClass} rounded-2xl border-2 border-dashed border-border bg-card overflow-hidden hover:border-primary/60 transition-colors focus:outline-none`}
       >
         {src ? (
           <motion.img
@@ -85,16 +126,31 @@ const PhotoSlot = ({
           </div>
         )}
       </button>
+
+      {/* Floating reset button appears once an image is uploaded so they can revert it */}
+      <AnimatePresence>
+        {isCustom && (
+          <motion.button
+            initial={{ scale: 0, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            exit={{ scale: 0, opacity: 0 }}
+            onClick={resetPhoto}
+            title="Reset to original photo"
+            className="absolute top-3 right-3 p-2 bg-background/90 text-foreground hover:text-primary rounded-full border border-border shadow-md z-10 transition-colors"
+          >
+            <RotateCcw className="w-4 h-4" />
+          </motion.button>
+        )}
+      </AnimatePresence>
+
       <input
         ref={inputRef}
         type="file"
         accept="image/*"
         className="hidden"
-        onChange={(e) => {
-          const f = e.target.files?.[0];
-          if (f) setSrc(URL.createObjectURL(f));
-        }}
+        onChange={handleImageUpload}
       />
+
       <p className="font-hand italic text-lg mt-3 text-foreground/70">
         {caption}
       </p>
